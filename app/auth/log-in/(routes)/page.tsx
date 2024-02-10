@@ -8,14 +8,25 @@ import { toast } from "react-hot-toast";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Login = () => {
+  let mainUrl = "https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/";
   const router = useRouter();
+  const isTokenAvailable = localStorage.getItem("myDataKey");
+  if (isTokenAvailable) {
+    router.push("/");
+  }
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
     email: "",
+    password: "",
   });
-  const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
+  const [storedValue, setStoredValue] = useState("");
   const [error, setError] = useState("");
+  const handleUpdateStorage = (value: string) => {
+    const newValue = value;
+
+    setStoredValue(newValue);
+
+    localStorage.setItem("myDataKey", newValue);
+  };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -26,62 +37,51 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      if (!formData.username || !formData.password) {
-        setError("All fields are required");
+      if (!formData.email || !formData.password) {
+        setError("Sva polja su obavezna");
         return;
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("An error occurred. Please try again.");
+      console.error("Greška prilikom slanja forme:", error);
+      setError("Došlo je do greške. Pokušajte ponovo.");
     }
     try {
-      const response = await axios.post("/api/auth/login", formData);
-      console.log("User login successfull.", response.data);
-      toast.success("User login successfull.");
-      router.push(`/home/${formData.username}`);
+      const response = await axios.post(`${mainUrl}auth/login`, formData);
+
+      if (!response.data.authToken) {
+        toast.error("Nije autorizovan");
+      } else {
+        handleUpdateStorage(response.data.authToken);
+        console.log("Korisnik uspješno prijavljen.", response.data);
+        toast.success("Korisnik uspješno prijavljen.");
+        router.push("/new");
+      }
     } catch (error) {
-      toast.error("Something went wrong.");
+      toast.error("Nešto je pošlo po zlu.");
     }
   };
   return (
-    <div className="flex flex-col items-center h-[100%] w-[100%] ">
-      <Card className="flex justify-between h-[7%] w-[80%] mb-28">
-        <CardHeader className="flex justify-center p-0">
-          <CardTitle className=" m-6">Login</CardTitle>
-        </CardHeader>
-
-        <div className="flex justify-end items-center w-[50%]">
-          <Button
-            variant="outline"
-            className="m-2 w-[30%] "
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            Go Back
-          </Button>
-        </div>
-      </Card>
+    <div className="flex flex-col items-center h-[100%] w-[100%]  mt-28">
       <Card className="p-4 text-black w-[50%] ">
         <CardHeader className="flex justify-center p-0">
-          <CardTitle className=" m-6">Login</CardTitle>
+          <CardTitle className=" m-6">Prijavljivanje</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit} className="pl-5">
           <label>
-            Username:
+            Email:
             <Input
-              placeholder="Enter username"
+              placeholder="Unesite email"
               type="text"
-              name="username"
-              value={formData.username}
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               className="bg-slate-400 w-[100%]"
             />
           </label>
           <label>
-            Password:
+            Lozinka:
             <Input
-              placeholder="Enter password"
+              placeholder="Unesite lozinku"
               type="password"
               name="password"
               value={formData.password}
@@ -95,7 +95,7 @@ const Login = () => {
             variant="default"
             className="p-4  mt-10 mb-10 w-[30%]"
           >
-            Log In
+            Prijavi se
           </Button>
         </form>
       </Card>

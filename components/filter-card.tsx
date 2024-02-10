@@ -1,4 +1,3 @@
-"use client";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,9 +21,7 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -33,130 +30,95 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Separator } from "./ui/separator";
+import { useRouter } from "next/navigation";
+
 const Filters = () => {
+  const router = useRouter();
+
   const formSchema = z.object({
     brand: z.string(),
     price: z.string(),
-    fuel: z.enum(["All", "Gas", "Diesel", "Electricity"]),
+    fuel: z.string(),
     startingYear: z.string().refine(
       (value) => {
-        if (!value) return true; // Return true if startingYear is not provided
+        if (!value) return true;
         const numericValue = parseInt(value, 10);
         return numericValue >= 1900 && numericValue <= 2024;
       },
-      { message: "Year must be between 1900 and 2024" }
+      { message: "Godina mora biti između 1900. i 2024." }
     ),
     endingYear: z.string().refine(
       (value) => {
-        if (!value) return true; // Return true if endingYear is not provided
+        if (!value) return true;
         const numericValue = parseInt(value, 10);
         return numericValue >= 1900 && numericValue <= 2024;
       },
-      { message: "Year must be between 1900 and 2024" }
+      { message: "Godina mora biti između 1900. i 2024." }
     ),
-    bodyType: z.enum([
-      "All",
-      "Sedan",
-      "SUV",
-      "Truck",
-      "Hatchback",
-      "Convertible",
-    ]),
+    bodyType: z.string(),
   });
-  const filterData = [
-    {
-      id: 1,
-      label: "Brand",
-      placeholder: "Select a car brand",
-      options: ["All", "BMW", "Volkswagen", "Audi"],
-    },
-    {
-      id: 2,
-      label: "Price",
-      placeholder: "Enter price",
-      options: [],
-      isInput: true,
-    },
-    {
-      id: 3,
-      label: "Fuel",
-      placeholder: "Select a car fuel",
-      options: ["All", "Gas", "Deisel", "Electricity"],
-    },
-    {
-      id: 4,
-      label: "Starting year",
-      placeholder: "Enter a starting year",
-      options: [],
-      isInput: true,
-    },
-    {
-      id: 5,
-      label: "Ending year",
-      placeholder: "Enter an ending year",
-      options: [],
-      isInput: true,
-    },
-    {
-      id: 6,
-      label: "Body Type",
-      placeholder: "Select a car body type",
-      options: ["All", "Sedan", "SUV", "Truck", "Hatchback", "Convertible"],
-    },
-  ];
+
+  const defaultValues = {
+    brand: "",
+    price: "",
+    fuel: "",
+    startingYear: "",
+    endingYear: "",
+    bodyType: "",
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      brand: "All",
-      price: "",
-      fuel: "All",
-      startingYear: "",
-      endingYear: "",
-      bodyType: "All",
-    },
+    defaultValues,
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    if (form.formState.isValid) {
-      // Perform additional checks if needed
-      toast.success("Success");
-      console.log(values);
-    } else {
-      toast.error("Form is not valid. Please check your inputs.");
-    }
-  }
+
+  const onSubmit = (formData: Record<string, any>) => {
+    const filteredFormData = Object.fromEntries(
+      Object.entries(formData).filter(
+        ([key, value]) => value !== undefined && value !== null
+      )
+    );
+
+    const queryParams = new URLSearchParams(filteredFormData).toString();
+
+    window.location.href = `/?${queryParams}`;
+  };
+
   return (
     <Card className="flex flex-col justify-between m-4 h-auto w-[80%]">
       <CardHeader>
-        <CardTitle>Search cars</CardTitle>
+        <CardTitle>Pretraga automobila</CardTitle>
         <CardDescription>
-          Explore a curated selection of pre-owned cars tailored to your
-          preferences.
+          Istražite odabrani izbor polovnih automobila prilagođen vašim
+          preferencijama.
         </CardDescription>
       </CardHeader>
       <Separator className="mb-6" />
       <CardContent>
         <Form {...form}>
           <form
+            method="get"
+            action="/"
             onSubmit={form.handleSubmit(onSubmit)}
-            className=" grid grid-cols-3 ml-4"
+            className="grid grid-cols-3 ml-4"
           >
             <FormField
               control={form.control}
               name="brand"
               render={({ field }) => (
                 <FormItem className="w-[280px] mb-6">
-                  <FormLabel>Brand</FormLabel>
+                  <FormLabel>Brend</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a car brand" />
+                        <SelectValue placeholder="Izaberite brend automobila" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="All">All</SelectItem>
+                      <SelectItem value="Sve">Sve</SelectItem>
                       <SelectItem value="BMW">BMW</SelectItem>
                       <SelectItem value="AUDI">Audi</SelectItem>
                       <SelectItem value="VW">Volkswagen</SelectItem>
@@ -171,21 +133,21 @@ const Filters = () => {
               name="fuel"
               render={({ field }) => (
                 <FormItem className="w-[280px]">
-                  <FormLabel>Fuel</FormLabel>
+                  <FormLabel>Gorivo</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a car fuel" />
+                        <SelectValue placeholder="Izaberite vrstu goriva" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="All">Any</SelectItem>
-                      <SelectItem value="Gas">Gas</SelectItem>
-                      <SelectItem value="Diesel">Diesel</SelectItem>
-                      <SelectItem value="Electricity">Electricity</SelectItem>
+                      <SelectItem value="Sve">Sve</SelectItem>
+                      <SelectItem value="Benzin">Benzin</SelectItem>
+                      <SelectItem value="Dizel">Dizel</SelectItem>
+                      <SelectItem value="Električnost">Električnost</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -197,27 +159,27 @@ const Filters = () => {
               name="price"
               render={({ field }) => (
                 <FormItem className="w-[280px]">
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>Cena</FormLabel>
                   <Input
                     type="text"
-                    placeholder="Enter max price"
-                    value={field.value}
+                    placeholder="Unesite maksimalnu cenu"
+                    value={field.value ?? ""}
                     onChange={field.onChange}
                   />
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
             <FormField
               control={form.control}
               name="startingYear"
               render={({ field }) => (
                 <FormItem className="w-[280px]">
-                  <FormLabel>Starting Year</FormLabel>
+                  <FormLabel>Početna godina</FormLabel>
                   <Input
                     type="text"
-                    placeholder="Enter a starting year"
-                    value={field.value}
+                    placeholder="Unesite početnu godinu proizvodnje"
+                    value={field.value ?? ""}
                     onChange={field.onChange}
                   />
                   <FormMessage />
@@ -229,11 +191,11 @@ const Filters = () => {
               name="endingYear"
               render={({ field }) => (
                 <FormItem className="w-[280px]">
-                  <FormLabel>Ending Year</FormLabel>
+                  <FormLabel>Završna godina</FormLabel>
                   <Input
                     type="text"
-                    placeholder="Enter an ending year"
-                    value={field.value}
+                    placeholder="Unesite završnu godinu proizvodnje"
+                    value={field.value ?? ""}
                     onChange={field.onChange}
                   />
                   <FormMessage />
@@ -245,23 +207,38 @@ const Filters = () => {
               name="bodyType"
               render={({ field }) => (
                 <FormItem className="w-[280px]">
-                  <FormLabel>Body Type</FormLabel>
+                  <FormLabel>Tip karoserije</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a car body type" />
+                        <SelectValue placeholder="Izaberite tip karoserije" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="All">All</SelectItem>
-                      <SelectItem value="Sedan">Sedan</SelectItem>
-                      <SelectItem value="SUV">SUV</SelectItem>
-                      <SelectItem value="Truck">Truck</SelectItem>
-                      <SelectItem value="Hatchback">Hatchback</SelectItem>
-                      <SelectItem value="Convertible">Convertible</SelectItem>
+                      <SelectItem key={1} value="Sve">
+                        Sve
+                      </SelectItem>
+                      <SelectItem key={2} value="Limuzina">
+                        Limuzina
+                      </SelectItem>
+                      <SelectItem key={3} value="SUV">
+                        SUV
+                      </SelectItem>
+                      <SelectItem key={4} value="Kamion">
+                        Kamion
+                      </SelectItem>
+                      <SelectItem key={5} value="Hecbek">
+                        Hečbek
+                      </SelectItem>
+                      <SelectItem key={6} value="Kabriolet">
+                        Kabriolet
+                      </SelectItem>
+                      <SelectItem key={7} value="Karavan">
+                        Karavan
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -277,7 +254,7 @@ const Filters = () => {
             className="w-[30%]"
           >
             <Search />
-            Search
+            Pretraga
           </Button>
         </CardFooter>
       </CardContent>

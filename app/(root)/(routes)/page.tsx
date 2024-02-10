@@ -1,3 +1,4 @@
+"use client";
 import CarList from "@/components/car-list";
 import Filters from "@/components/filter-card";
 

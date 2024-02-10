@@ -1,8 +1,9 @@
+import Navbar from "@/components/navbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Login page",
-  description: "Login page",
+  title: "SignUp stranica",
+  description: "SignUp stranica",
 };
 
 export default function SetupLayout({
@@ -14,6 +15,7 @@ export default function SetupLayout({
     <div
       className={"h-[100vh] w-[100vw] flex flex-col items-center bg-slate-50"}
     >
+      <Navbar />
       {children}
     </div>
   );

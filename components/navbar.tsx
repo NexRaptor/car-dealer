@@ -1,35 +1,73 @@
 "use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle } from "./ui/card";
 
 const Navbar = () => {
   const router = useRouter();
+
+  // Function to handle logout
+  const handleLogout = () => {
+    // Remove the token from local storage
+    localStorage.removeItem("myDataKey");
+
+    // Redirect to the logout page or any other desired page
+    router.push("/auth/log-in");
+  };
+
+  // Check if the token exists in local storage
+  const isTokenAvailable = localStorage.getItem("myDataKey");
   return (
     <Card className="flex justify-between h-[7%] w-[80%]">
       <CardHeader className="flex justify-center p-0">
-        <CardTitle className=" m-6 ">Used cars</CardTitle>
+        <Link href="/">
+          <CardTitle className="m-6">Polovna vozila</CardTitle>
+        </Link>
       </CardHeader>
 
       <div className="flex justify-end items-center w-[50%]">
-        <Button
-          variant="outline"
-          className="m-2 w-[20%]"
-          onClick={() => {
-            router.push("/auth/log-in/");
-          }}
-        >
-          Log In
-        </Button>
-        <Button
-          variant="default"
-          className="m-2 w-[30%] "
-          onClick={() => {
-            router.push("/auth/sign-up/");
-          }}
-        >
-          Sign Up
-        </Button>
+        {!isTokenAvailable ? ( // Render Log In and Sign Up buttons
+          <>
+            <Button
+              variant="outline"
+              className="m-2 w-[20%]"
+              onClick={() => {
+                router.push("/auth/log-in/");
+              }}
+            >
+              Prijavi se
+            </Button>
+            <Button
+              variant="default"
+              className="m-2 w-[30%]"
+              onClick={() => {
+                router.push("/auth/sign-up/");
+              }}
+            >
+              Registracija
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              variant="outline"
+              className="m-2 w-[20%]"
+              onClick={() => {
+                router.push("/new");
+              }}
+            >
+              Dodaj oglas
+            </Button>
+            <Button
+              variant="default"
+              className="m-2 w-[30%]"
+              onClick={handleLogout}
+            >
+              Odjavi se
+            </Button>
+          </>
+        )}
       </div>
     </Card>
   );

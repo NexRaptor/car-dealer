@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
-  title: "Login page",
-  description: "Login page",
+  title: "Pocetna-AutoOglasi",
+  description: "AutoOglasi - Objavite vas oglas besplatno i brzo!",
 };
 
 export default function SetupLayout({
@@ -18,7 +18,6 @@ export default function SetupLayout({
       className={"h-[100vh] w-[100vw] flex flex-col items-center bg-slate-50"}
     >
       <Navbar />
-
       {children}
     </div>
   );

@@ -1,27 +1,34 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+
 const SignIn = () => {
   const router = useRouter();
-
-  // Validation error messages state
+  const isTokenAvailable = localStorage.getItem("myDataKey");
+  if (isTokenAvailable) {
+    router.push("/");
+  }
+  let mainUrl = "https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/";
+  const [storedValue, setStoredValue] = useState("");
   const [errors, setErrors] = useState({
-    username: "",
+    name: "",
     email: "",
     password: "",
     passwordRepeat: "",
+    phone: "",
   });
 
   // Form data state
   const [formData, setFormData] = useState({
-    username: "",
+    name: "",
     password: "",
     email: "",
+    phone: "",
     passwordRepeat: "",
   });
 
@@ -38,20 +45,28 @@ const SignIn = () => {
     let valid = true;
     const newErrors = { ...errors };
 
-    // Validate username
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
+    // Validate name
+    if (!formData.name.trim()) {
+      newErrors.name = "Ime je obavezno";
       valid = false;
     } else {
-      newErrors.username = "";
+      newErrors.name = "";
     }
-
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Telefon je obavezan";
+      valid = false;
+    } else if (formData.phone.trim().length < 9) {
+      newErrors.phone = "Minimalna dužina broja telefona je 9";
+      valid = false;
+    } else {
+      newErrors.phone = "";
+    }
     // Validate email
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = "Email je obavezan";
       valid = false;
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
+      newErrors.email = "Neispravan format email adrese";
       valid = false;
     } else {
       newErrors.email = "";
@@ -59,13 +74,13 @@ const SignIn = () => {
 
     // Validate password
     if (!formData.password.trim()) {
-      newErrors.password = "Password is required";
+      newErrors.password = "Lozinka je obavezna";
       valid = false;
-    } else {
-      newErrors.password = "";
-    }
-    if (formData.password.trim().length < 8) {
-      newErrors.password = "Password need to have 8 characters";
+    } else if (formData.password.trim().length < 8) {
+      newErrors.password = "Lozinka mora imati najmanje 8 karaktera";
+      valid = false;
+    } else if (!/[a-zA-Z]/.test(formData.password)) {
+      newErrors.password = "Lozinka mora sadržavati barem jedno slovo";
       valid = false;
     } else {
       newErrors.password = "";
@@ -73,7 +88,7 @@ const SignIn = () => {
 
     // Validate password repeat
     if (formData.password !== formData.passwordRepeat) {
-      newErrors.passwordRepeat = "Passwords do not match";
+      newErrors.passwordRepeat = "Lozinke se ne podudaraju";
       valid = false;
     } else {
       newErrors.passwordRepeat = "";
@@ -91,57 +106,59 @@ const SignIn = () => {
     if (validateForm()) {
       // Your form submission logic here (e.g., using axios)
       try {
-        const response = await axios.post("/api/auth/signup", formData);
-        console.log("User created successfully:", response.data);
-        toast.success("User created successfully.");
+        const response = await axios.post(`${mainUrl}auth/signup`, formData);
+        if (!response.data.authToken) {
+          toast.error("Nije autorizovan");
+        } else {
+          handleUpdateStorage(response.data.authToken);
+          console.log("Korisnik uspješno kreiran:", response.data);
+          toast.success("Korisnik uspješno kreiran.");
+          router.push("/new");
+        }
       } catch (error) {
-        toast.error("Something went wrong.");
+        toast.error("Došlo je do greške.");
       }
     }
   };
 
-  return (
-    <div className="flex flex-col items-center h-[100%] w-[100%] ">
-      <Card className="flex justify-between h-[7%] w-[80%] mb-28">
-        <CardHeader className="flex justify-center p-0">
-          <CardTitle className=" m-6">Sign Up</CardTitle>
-        </CardHeader>
+  const handleUpdateStorage = (value: string) => {
+    const newValue = value;
 
-        <div className="flex justify-end items-center w-[50%]">
-          <Button
-            variant="outline"
-            className="m-2 w-[30%] "
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            Go Back
-          </Button>
-        </div>
-      </Card>
+    setStoredValue(newValue);
+
+    localStorage.setItem("myDataKey", newValue);
+  };
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("myDataKey");
+    if (storedData) {
+      setStoredValue(storedData);
+    }
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center h-[100%] w-[100%] mt-28">
       <Card className="pr-4 text-black w-[50%] ">
         <CardHeader className="flex justify-center p-0">
-          <CardTitle className=" m-6">Sign Up</CardTitle>
+          <CardTitle className=" m-6">Registracija</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit} className="ml-6">
           <label>
-            Username:
+            Ime:
             <Input
-              placeholder="Enter username"
+              placeholder="Unesite ime"
               type="text"
-              name="username"
-              value={formData.username}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               className="bg-slate-400 "
             />
-            {errors.username && (
-              <div className="text-red-500">{errors.username}</div>
-            )}
+            {errors.name && <div className="text-red-500">{errors.name}</div>}
           </label>
           <label>
             E-mail:
             <Input
-              placeholder="Enter email"
+              placeholder="Unesite email"
               type="email"
               name="email"
               value={formData.email}
@@ -151,9 +168,21 @@ const SignIn = () => {
             {errors.email && <div className="text-red-500">{errors.email}</div>}
           </label>
           <label>
-            Password:
+            Telefon:
             <Input
-              placeholder="Enter password"
+              placeholder="Unesite telefon"
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="bg-slate-400"
+            />
+            {errors.phone && <div className="text-red-500">{errors.phone}</div>}
+          </label>
+          <label>
+            Lozinka:
+            <Input
+              placeholder="Unesite lozinku"
               type="password"
               name="password"
               value={formData.password}
@@ -165,9 +194,9 @@ const SignIn = () => {
             )}
           </label>
           <label>
-            Repeat Password:
+            Ponovi lozinku:
             <Input
-              placeholder="Repeat password"
+              placeholder="Ponovite lozinku"
               type="password"
               name="passwordRepeat"
               value={formData.passwordRepeat}
@@ -181,10 +210,10 @@ const SignIn = () => {
 
           <Button
             type="submit"
-            variant="secondary"
-            className="p-4 mt-10 mb-10 w-[100%] bg-green-500 text-white"
+            variant="default"
+            className="p-4 mt-10 mb-10 w-[30%]"
           >
-            Sign Up
+            Registracija
           </Button>
         </form>
       </Card>
