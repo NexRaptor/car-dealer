@@ -52,12 +52,11 @@ const Login = () => {
         toast.error("Nije autorizovan");
       } else {
         handleUpdateStorage(response.data.authToken);
-        console.log("Korisnik uspješno prijavljen.", response.data);
         toast.success("Korisnik uspješno prijavljen.");
         router.push("/new");
       }
     } catch (error) {
-      toast.error("Nešto je pošlo po zlu.");
+      toast.error("Došlo je do greške. Pokušajte ponovo.");
     }
   };
   return (

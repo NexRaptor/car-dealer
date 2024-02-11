@@ -31,10 +31,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Separator } from "./ui/separator";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Filters = () => {
   const router = useRouter();
-
   const formSchema = z.object({
     brand: z.string(),
     price: z.string(),
@@ -58,13 +58,15 @@ const Filters = () => {
     bodyType: z.string(),
   });
 
+  const queryParams = new URLSearchParams(window.location.search);
+
   const defaultValues = {
-    brand: "",
-    price: "",
-    fuel: "",
-    startingYear: "",
-    endingYear: "",
-    bodyType: "",
+    brand: queryParams.get("brand") || "",
+    price: queryParams.get("price") || "",
+    fuel: queryParams.get("fuel") || "",
+    startingYear: queryParams.get("startingYear") || "",
+    endingYear: queryParams.get("endingYear") || "",
+    bodyType: queryParams.get("bodyType") || "",
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -83,6 +85,20 @@ const Filters = () => {
 
     window.location.href = `/?${queryParams}`;
   };
+  useEffect(() => {
+    // Get query parameters from the URL
+    const queryParams = new URLSearchParams(window.location.search);
+
+    // Set default values in the form when the component mounts or when the route changes
+    form.reset({
+      brand: queryParams.get("brand") || "",
+      price: queryParams.get("price") || "",
+      fuel: queryParams.get("fuel") || "",
+      startingYear: queryParams.get("startingYear") || "",
+      endingYear: queryParams.get("endingYear") || "",
+      bodyType: queryParams.get("bodyType") || "",
+    });
+  }, [window.location.pathname, form]);
 
   return (
     <Card className="flex flex-col justify-between m-4 h-auto w-[80%]">

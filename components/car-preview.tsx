@@ -57,13 +57,14 @@ const PregledAutomobila: React.FC<PregledProps> = ({ id }) => {
 
     return (
       <div className="flex flex-row items-center mt-7 w-[80%]">
-        <Card className="w-30 h-30 p-2">
+        <Card className="w-[51vw] h-[52vw] p-2">
           <img
             src={carDetails.car_image?.url || "/default-image.jpg"}
-            alt={carDetails.brand || "test"}
+            alt={carDetails.brand || "Unknown"}
             style={{
-              width: "40vw",
-              height: "auto",
+              width: "50vw",
+              height: "50vw",
+              objectFit: "cover", // This will maintain aspect ratio and cover the container
               display: "block",
               borderRadius: "10px",
             }}

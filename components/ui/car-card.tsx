@@ -6,7 +6,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "./card";
 // Specify the type for the 'car' prop
 interface CarCardProps {
   car: {
-    id: number; // Assuming 'id' is a unique identifier for the car
+    id: number;
     brand: string;
     price: number;
     year: number;
@@ -30,7 +30,12 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
         <img
           src={car_image?.url}
           alt={brand}
-          style={{ width: "100%", height: "auto", display: "block" }}
+          style={{
+            width: "100%",
+            height: "100%", // Set a fixed height for the image container
+            objectFit: "cover", // Preserve aspect ratio while covering the container
+            display: "block",
+          }}
         />
       </div>
       <CardHeader>

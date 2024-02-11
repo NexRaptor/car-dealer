@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
@@ -17,16 +16,35 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 const CreateNew = () => {
+  const authToken = localStorage.getItem("myDataKey");
   const mainUrl = "https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/";
   const router = useRouter();
   const isTokenAvailable = localStorage.getItem("myDataKey");
-
+  const [id, setId] = useState(0);
   if (!isTokenAvailable) {
     router.push("/");
   }
-
+  useEffect(() => {
+    // Make the API request when the component mounts
+    axios
+      .get("https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/auth/me", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+      .then((response) => {
+        // Handle successful response
+        console.log("User data:", response.data);
+        setId(response.data.id);
+      })
+      .catch((error) => {
+        // Handle error response
+        console.error("Error fetching user data:", error);
+      });
+  }, [authToken]);
   const formSchema = z.object({
     user_id: z.number(),
     brand: z.string(),
@@ -34,19 +52,19 @@ const CreateNew = () => {
     fuel: z.string(),
     year: z.string(),
     bodyType: z.string(),
-    car_image: z.unknown(),
+    file: z.unknown(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      user_id: 21,
+      user_id: id,
       brand: "",
       price: "",
       fuel: "",
       year: "",
       bodyType: "",
-      car_image: null,
+      file: null,
     },
   });
 
@@ -54,13 +72,13 @@ const CreateNew = () => {
     if (form.formState.isValid) {
       try {
         const formData = new FormData();
-        formData.append("user_id", String(21));
+        formData.append("user_id", String(id));
         formData.append("brand", values.brand);
         formData.append("price", values.price);
         formData.append("fuel", values.fuel);
         formData.append("year", values.year);
         formData.append("bodyType", values.bodyType);
-
+        formData.append("file", values.file as File);
         const authToken = localStorage.getItem("myDataKey");
 
         const response = await axios.post(`${mainUrl}car`, formData, {
@@ -105,7 +123,7 @@ const CreateNew = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="BMW">BMW</SelectItem>
-                      <SelectItem value="AUDI">Audi</SelectItem>
+                      <SelectItem value="Audi">Audi</SelectItem>
                       <SelectItem value="VW">Volkswagen</SelectItem>
                     </SelectContent>
                   </Select>
@@ -194,9 +212,9 @@ const CreateNew = () => {
                 </div>
               )}
             />
-            {/* <FormField
+            <FormField
               control={form.control}
-              name="car_image"
+              name="file"
               render={({ field }) => (
                 <div className="flex flex-col">
                   <FormLabel className="m-2 ml-0">
@@ -207,7 +225,7 @@ const CreateNew = () => {
                     accept=".jpg, .jpeg, .png"
                     onChange={(event) => {
                       const file = event.target.files?.[0];
-                      form.setValue("car_image", file, {
+                      form.setValue("file", file, {
                         shouldValidate: true,
                         shouldDirty: true,
                       });
@@ -216,7 +234,7 @@ const CreateNew = () => {
                   <FormMessage />
                 </div>
               )}
-            /> */}
+            />
 
             <Button
               type="submit"
