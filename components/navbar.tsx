@@ -10,14 +10,18 @@ const Navbar = () => {
   // Function to handle logout
   const handleLogout = () => {
     // Remove the token from local storage
-    localStorage.removeItem("myDataKey");
+
+    if (typeof localStorage !== "undefined") {
+      localStorage.removeItem("myDataKey");
+    }
 
     // Redirect to the logout page or any other desired page
     router.push("/auth/log-in");
   };
 
-  // Check if the token exists in local storage
-  const isTokenAvailable = localStorage.getItem("myDataKey");
+  const isTokenAvailable =
+    typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
+
   return (
     <Card className="flex justify-between h-[7%] w-[80%]">
       <CardHeader className="flex justify-center p-0">

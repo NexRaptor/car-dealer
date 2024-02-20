@@ -28,7 +28,6 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 import { Separator } from "./ui/separator";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -58,7 +57,13 @@ const Filters = () => {
     bodyType: z.string(),
   });
 
-  const queryParams = new URLSearchParams(window.location.search);
+  // Check if running in the browser before accessing window
+  const queryParams =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search)
+      : new URLSearchParams();
+
+  // Rest of your code using queryParams
 
   const defaultValues = {
     brand: queryParams.get("brand") || "",
@@ -86,18 +91,21 @@ const Filters = () => {
     window.location.href = `/?${queryParams}`;
   };
   useEffect(() => {
-    // Get query parameters from the URL
-    const queryParams = new URLSearchParams(window.location.search);
+    // Check if window is defined (to avoid ReferenceError during SSR or non-browser environments)
+    if (typeof window !== "undefined") {
+      // Get query parameters from the URL
+      const queryParams = new URLSearchParams(window.location.search);
 
-    // Set default values in the form when the component mounts or when the route changes
-    form.reset({
-      brand: queryParams.get("brand") || "",
-      price: queryParams.get("price") || "",
-      fuel: queryParams.get("fuel") || "",
-      startingYear: queryParams.get("startingYear") || "",
-      endingYear: queryParams.get("endingYear") || "",
-      bodyType: queryParams.get("bodyType") || "",
-    });
+      // Set default values in the form when the component mounts or when the route changes
+      form.reset({
+        brand: queryParams.get("brand") || "",
+        price: queryParams.get("price") || "",
+        fuel: queryParams.get("fuel") || "",
+        startingYear: queryParams.get("startingYear") || "",
+        endingYear: queryParams.get("endingYear") || "",
+        bodyType: queryParams.get("bodyType") || "",
+      });
+    }
   }, [window.location.pathname, form]);
 
   return (
