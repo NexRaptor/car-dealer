@@ -9,7 +9,8 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 const SignIn = () => {
   const router = useRouter();
-  const isTokenAvailable = localStorage.getItem("myDataKey");
+  const isTokenAvailable =
+    typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
   if (isTokenAvailable) {
     router.push("/");
   }

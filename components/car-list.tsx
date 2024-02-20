@@ -3,7 +3,7 @@ import axios from "axios";
 import CarCard from "./ui/car-card";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
-import "../style/car-list.module.css";
+
 interface Car {
   id: number;
   brand: string;
@@ -93,7 +93,6 @@ const CarList = () => {
       </Card>
     );
   }
-
   // Render all cars if no query parameters are present
   return (
     <Card className="flex flex-col justify-between m-4 h-auto w-[80%]">

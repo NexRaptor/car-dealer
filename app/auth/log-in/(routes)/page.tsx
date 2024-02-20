@@ -10,7 +10,8 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 const Login = () => {
   let mainUrl = "https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/";
   const router = useRouter();
-  const isTokenAvailable = localStorage.getItem("myDataKey");
+  const isTokenAvailable =
+    typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
   if (isTokenAvailable) {
     router.push("/");
   }

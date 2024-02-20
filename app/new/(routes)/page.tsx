@@ -19,14 +19,40 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 const CreateNew = () => {
-  const authToken = localStorage.getItem("myDataKey");
-  const mainUrl = "https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/";
   const router = useRouter();
-  const isTokenAvailable = localStorage.getItem("myDataKey");
-  const [id, setId] = useState(0);
+  const isTokenAvailable =
+    typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
+
   if (!isTokenAvailable) {
     router.push("/");
   }
+
+  const authToken =
+    typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
+
+  const [id, setId] = useState(0);
+  const mainUrl = "https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/";
+  const formSchema = z.object({
+    user_id: z.number(),
+    brand: z.string(),
+    price: z.string(),
+    fuel: z.string(),
+    year: z.string(),
+    bodyType: z.string(),
+    file: z.unknown(),
+  });
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      user_id: id,
+      brand: "",
+      price: "",
+      fuel: "",
+      year: "",
+      bodyType: "",
+      file: null,
+    },
+  });
   useEffect(() => {
     // Make the API request when the component mounts
     axios
@@ -45,29 +71,6 @@ const CreateNew = () => {
         console.error("Error fetching user data:", error);
       });
   }, [authToken]);
-  const formSchema = z.object({
-    user_id: z.number(),
-    brand: z.string(),
-    price: z.string(),
-    fuel: z.string(),
-    year: z.string(),
-    bodyType: z.string(),
-    file: z.unknown(),
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      user_id: id,
-      brand: "",
-      price: "",
-      fuel: "",
-      year: "",
-      bodyType: "",
-      file: null,
-    },
-  });
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (form.formState.isValid) {
       try {

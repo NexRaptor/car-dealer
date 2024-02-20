@@ -91,9 +91,7 @@ const Filters = () => {
     window.location.href = `/?${queryParams}`;
   };
   useEffect(() => {
-    // Check if window is defined (to avoid ReferenceError during SSR or non-browser environments)
     if (typeof window !== "undefined") {
-      // Get query parameters from the URL
       const queryParams = new URLSearchParams(window.location.search);
 
       // Set default values in the form when the component mounts or when the route changes
@@ -106,7 +104,7 @@ const Filters = () => {
         bodyType: queryParams.get("bodyType") || "",
       });
     }
-  }, [window.location.pathname, form]);
+  }, [form]);
 
   return (
     <Card className="flex flex-col justify-between m-4 h-auto w-[80%]">
