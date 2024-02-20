@@ -12,8 +12,6 @@ interface Car {
   car_image: {
     url: string;
   };
-  // Add types for additional properties here
-  // For example:
   fuel: string;
   startingYear: number;
   endingYear: number;
@@ -22,6 +20,7 @@ interface Car {
 
 const CarList = () => {
   const [carData, setCarData] = useState<Car[]>([]);
+  const [filteredCarData, setFilteredCarData] = useState<Car[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,62 +37,42 @@ const CarList = () => {
     fetchData();
   }, []);
 
-  let currentUrl = window.location.href;
+  useEffect(() => {
+    let currentUrl = window.location.href;
 
-  if (currentUrl.includes("?")) {
-    let queryParams = new URLSearchParams(window.location.search);
-    let brand = queryParams.get("brand");
-    let price = queryParams.get("price");
-    let fuel = queryParams.get("fuel");
-    let startingYear = queryParams.get("startingYear");
-    let endingYear = queryParams.get("endingYear");
-    let bodyType = queryParams.get("bodyType");
-    let filteredCarData = carData.filter((car: Car) => {
-      const carYear = car.year;
+    if (currentUrl.includes("?")) {
+      let queryParams = new URLSearchParams(window.location.search);
+      let brand = queryParams.get("brand");
+      let price = queryParams.get("price");
+      let fuel = queryParams.get("fuel");
+      let startingYear = queryParams.get("startingYear");
+      let endingYear = queryParams.get("endingYear");
+      let bodyType = queryParams.get("bodyType");
+      let filteredCars = carData.filter((car: Car) => {
+        const carYear = car.year;
 
-      return (
-        (!brand ||
-          brand.toLowerCase() === "sve" ||
-          car.brand.toLowerCase() === brand.toLowerCase()) &&
-        (!price || car.price <= parseFloat(price)) &&
-        (!fuel ||
-          fuel.toLowerCase() === "sve" ||
-          car.fuel.toLowerCase() === fuel.toLowerCase()) &&
-        (!startingYear || carYear >= parseInt(startingYear, 10)) &&
-        (!endingYear || carYear <= parseInt(endingYear, 10)) &&
-        (!bodyType ||
-          bodyType.toLowerCase() === "sve" ||
-          car.bodyType.toLowerCase() === bodyType.toLowerCase())
-      );
-    });
-    if (filteredCarData.length === 0) {
-      return (
-        <Card className="flex flex-col justify-between m-4 h-auto w-[80%]">
-          <CardHeader>
-            <CardTitle>Oglasi</CardTitle>
-          </CardHeader>
-          <Separator className="mb-6" />
-          <CardContent className="grid grid-cols-4 grid-rows-3">
-            <div className="font-bold text-3xl">Nema Rezultata!</div>;
-          </CardContent>
-        </Card>
-      );
+        return (
+          (!brand ||
+            brand.toLowerCase() === "sve" ||
+            car.brand.toLowerCase() === brand.toLowerCase()) &&
+          (!price || car.price <= parseFloat(price)) &&
+          (!fuel ||
+            fuel.toLowerCase() === "sve" ||
+            car.fuel.toLowerCase() === fuel.toLowerCase()) &&
+          (!startingYear || carYear >= parseInt(startingYear, 10)) &&
+          (!endingYear || carYear <= parseInt(endingYear, 10)) &&
+          (!bodyType ||
+            bodyType.toLowerCase() === "sve" ||
+            car.bodyType.toLowerCase() === bodyType.toLowerCase())
+        );
+      });
+
+      setFilteredCarData(filteredCars.length === 0 ? null : filteredCars);
+    } else {
+      setFilteredCarData(null);
     }
-    return (
-      <Card className=" flex flex-col justify-between m-4 h-auto w-[80%]">
-        <CardHeader>
-          <CardTitle className="lista">Oglasi</CardTitle>
-        </CardHeader>
-        <Separator className="mb-6" />
-        <CardContent className="grid grid-cols-4 grid-rows-3">
-          {filteredCarData.map((car: Car) => (
-            <CarCard key={car.id} car={car} />
-          ))}
-        </CardContent>
-      </Card>
-    );
-  }
-  // Render all cars if no query parameters are present
+  }, [carData]);
+
   return (
     <Card className="flex flex-col justify-between m-4 h-auto w-[80%]">
       <CardHeader>
@@ -101,9 +80,17 @@ const CarList = () => {
       </CardHeader>
       <Separator className="mb-6" />
       <CardContent className="grid grid-cols-4 grid-rows-3">
-        {carData.map((car: Car) => (
-          <CarCard key={car.id} car={car} />
-        ))}
+        {filteredCarData ? (
+          filteredCarData.length === 0 ? (
+            <div className="font-bold text-3xl">Nema Rezultata!</div>
+          ) : (
+            filteredCarData.map((car: Car) => (
+              <CarCard key={car.id} car={car} />
+            ))
+          )
+        ) : (
+          carData.map((car: Car) => <CarCard key={car.id} car={car} />)
+        )}
       </CardContent>
     </Card>
   );
