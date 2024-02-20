@@ -20,16 +20,14 @@ import { useEffect, useState } from "react";
 
 const CreateNew = () => {
   const router = useRouter();
-  const isTokenAvailable =
-    typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
+  if (typeof window !== "undefined") {
+    const isTokenAvailable =
+      typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
 
-  if (!isTokenAvailable) {
-    router.push("/");
+    if (!isTokenAvailable) {
+      router.push("/");
+    }
   }
-
-  const authToken =
-    typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
-
   const [id, setId] = useState(0);
   const mainUrl = "https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/";
   const formSchema = z.object({
@@ -54,23 +52,28 @@ const CreateNew = () => {
     },
   });
   useEffect(() => {
-    // Make the API request when the component mounts
-    axios
-      .get("https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/auth/me", {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-      .then((response) => {
-        // Handle successful response
-        console.log("User data:", response.data);
-        setId(response.data.id);
-      })
-      .catch((error) => {
-        // Handle error response
-        console.error("Error fetching user data:", error);
-      });
-  }, [authToken]);
+    const authToken = localStorage.getItem("myDataKey");
+
+    // Check if authToken is truthy before making the request
+    if (authToken) {
+      axios
+        .get("https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/auth/me", {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+        .then((response) => {
+          // Handle successful response
+          console.log("User data:", response.data);
+          setId(response.data.id);
+        })
+        .catch((error) => {
+          // Handle error response
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, []); // Empty dependency array to run only once on mount
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (form.formState.isValid) {
       try {
