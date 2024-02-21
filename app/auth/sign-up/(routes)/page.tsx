@@ -6,7 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-
+import "../../../../style/signup.css";
 const SignIn = () => {
   const router = useRouter();
   const isTokenAvailable =
@@ -138,8 +138,8 @@ const SignIn = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center h-[100%] w-[100%] mt-28">
-      <Card className="pr-4 text-black w-[50%] ">
+    <div className="flex flex-col items-center h-[100%] w-[100%] mt-20">
+      <Card className="kartica">
         <CardHeader className="flex justify-center p-0">
           <CardTitle className=" m-6">Registracija</CardTitle>
         </CardHeader>
@@ -212,7 +212,7 @@ const SignIn = () => {
           <Button
             type="submit"
             variant="default"
-            className="p-4 mt-10 mb-10 w-[30%]"
+            className="p-4 mt-10 mb-10 w-[50%]"
           >
             Registracija
           </Button>

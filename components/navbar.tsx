@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle } from "./ui/card";
-
+import "../style/navbar.css";
 const Navbar = () => {
   const router = useRouter();
 
@@ -23,10 +23,10 @@ const Navbar = () => {
     typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
 
   return (
-    <Card className="flex justify-between h-[7%] w-[80%]">
+    <Card className="navbar">
       <CardHeader className="flex justify-center p-0">
         <Link href="/">
-          <CardTitle className="m-6">Polovna vozila</CardTitle>
+          <CardTitle className="m-6 naslovHeadera">Polovna vozila</CardTitle>
         </Link>
       </CardHeader>
 
@@ -35,7 +35,7 @@ const Navbar = () => {
           <>
             <Button
               variant="outline"
-              className="m-2 w-[20%]"
+              className="m-2  buttonFont"
               onClick={() => {
                 router.push("/auth/log-in/");
               }}
@@ -44,7 +44,7 @@ const Navbar = () => {
             </Button>
             <Button
               variant="default"
-              className="m-2 w-[30%]"
+              className="m-2 buttonFont"
               onClick={() => {
                 router.push("/auth/sign-up/");
               }}
@@ -56,7 +56,7 @@ const Navbar = () => {
           <>
             <Button
               variant="outline"
-              className="m-2 w-[20%]"
+              className="m-2  buttonFont"
               onClick={() => {
                 router.push("/new");
               }}
@@ -65,7 +65,7 @@ const Navbar = () => {
             </Button>
             <Button
               variant="default"
-              className="m-2 w-[30%]"
+              className="m-2  buttonFont"
               onClick={handleLogout}
             >
               Odjavi se

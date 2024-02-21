@@ -3,7 +3,7 @@ import axios from "axios";
 import CarCard from "./ui/car-card";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
-
+import "../style/carList.css";
 interface Car {
   id: number;
   brand: string;
@@ -77,7 +77,7 @@ const CarList = () => {
   return (
     <Card className="flex flex-col justify-between m-4 h-auto w-[80%]">
       <CardHeader>
-        <CardTitle>Oglasi</CardTitle>
+        <CardTitle className="myclass">Oglasi</CardTitle>
       </CardHeader>
       <Separator className="mb-6" />
       <CardContent className="grid grid-cols-4 grid-rows-3">

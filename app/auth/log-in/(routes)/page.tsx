@@ -6,7 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-
+import "../../../../style/login.css";
 const Login = () => {
   let mainUrl = "https://x8ki-letl-twmt.n7.xano.io/api:E9IYILC6/";
   const router = useRouter();
@@ -62,7 +62,7 @@ const Login = () => {
   };
   return (
     <div className="flex flex-col items-center h-[100%] w-[100%]  mt-28">
-      <Card className="p-4 text-black w-[50%] ">
+      <Card className="kartica ">
         <CardHeader className="flex justify-center p-0">
           <CardTitle className=" m-6">Prijavljivanje</CardTitle>
         </CardHeader>
@@ -93,7 +93,7 @@ const Login = () => {
           <Button
             type="submit"
             variant="default"
-            className="p-4  mt-10 mb-10 w-[30%]"
+            className="p-4  mt-10 mb-10 w-[40%]"
           >
             Prijavi se
           </Button>

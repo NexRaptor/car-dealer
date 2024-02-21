@@ -1,7 +1,5 @@
 import Navbar from "@/components/navbar";
-import Filters from "@/components/filter-card";
 import type { Metadata } from "next";
-import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "Pocetna-AutoOglasi",

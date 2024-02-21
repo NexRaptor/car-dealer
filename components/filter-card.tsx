@@ -31,7 +31,7 @@ import { useForm } from "react-hook-form";
 import { Separator } from "./ui/separator";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
+import "../style/filterCar.css";
 const Filters = () => {
   const router = useRouter();
   const formSchema = z.object({
@@ -109,8 +109,8 @@ const Filters = () => {
   return (
     <Card className="flex flex-col justify-between m-4 h-auto w-[80%]">
       <CardHeader>
-        <CardTitle>Pretraga automobila</CardTitle>
-        <CardDescription>
+        <CardTitle className="naslovPretrage">Pretraga automobila</CardTitle>
+        <CardDescription className="opisPretrage">
           Istražite odabrani izbor polovnih automobila prilagođen vašim
           preferencijama.
         </CardDescription>
@@ -122,13 +122,13 @@ const Filters = () => {
             method="get"
             action="/"
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid grid-cols-3 ml-4"
+            className="gridRaspored"
           >
             <FormField
               control={form.control}
               name="brand"
               render={({ field }) => (
-                <FormItem className="w-[280px] mb-6">
+                <FormItem className="formItem">
                   <FormLabel>Brend</FormLabel>
                   <Select
                     onValueChange={field.onChange}
@@ -154,7 +154,7 @@ const Filters = () => {
               control={form.control}
               name="fuel"
               render={({ field }) => (
-                <FormItem className="w-[280px]">
+                <FormItem className="formItem">
                   <FormLabel>Gorivo</FormLabel>
                   <Select
                     onValueChange={field.onChange}
@@ -180,7 +180,7 @@ const Filters = () => {
               control={form.control}
               name="price"
               render={({ field }) => (
-                <FormItem className="w-[280px]">
+                <FormItem className="formItem">
                   <FormLabel>Cena</FormLabel>
                   <Input
                     type="text"
@@ -196,7 +196,7 @@ const Filters = () => {
               control={form.control}
               name="startingYear"
               render={({ field }) => (
-                <FormItem className="w-[280px]">
+                <FormItem className="formItem">
                   <FormLabel>Početna godina</FormLabel>
                   <Input
                     type="text"
@@ -212,7 +212,7 @@ const Filters = () => {
               control={form.control}
               name="endingYear"
               render={({ field }) => (
-                <FormItem className="w-[280px]">
+                <FormItem className="formItem">
                   <FormLabel>Završna godina</FormLabel>
                   <Input
                     type="text"
@@ -228,7 +228,7 @@ const Filters = () => {
               control={form.control}
               name="bodyType"
               render={({ field }) => (
-                <FormItem className="w-[280px]">
+                <FormItem className="formItem">
                   <FormLabel>Tip karoserije</FormLabel>
                   <Select
                     onValueChange={field.onChange}
@@ -273,7 +273,7 @@ const Filters = () => {
           <Button
             type="submit"
             onClick={form.handleSubmit(onSubmit)}
-            className="w-[30%]"
+            className="w-[280px]"
           >
             <Search />
             Pretraga
