@@ -48,6 +48,7 @@ const CarList = () => {
       let startingYear = queryParams.get("startingYear");
       let endingYear = queryParams.get("endingYear");
       let bodyType = queryParams.get("bodyType");
+
       let filteredCars = carData.filter((car: Car) => {
         const carYear = car.year;
 
@@ -67,7 +68,7 @@ const CarList = () => {
         );
       });
 
-      setFilteredCarData(filteredCars.length === 0 ? null : filteredCars);
+      setFilteredCarData(filteredCars);
     } else {
       setFilteredCarData(null);
     }
