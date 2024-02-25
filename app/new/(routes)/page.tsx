@@ -17,7 +17,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-
+import "../../../style/new.css";
 const CreateNew = () => {
   const router = useRouter();
   if (typeof window !== "undefined") {
@@ -107,8 +107,8 @@ const CreateNew = () => {
   };
 
   return (
-    <div className="flex flex-col items-center h-[100%] w-[100%] mt-28">
-      <Card className="pr-4 text-black w-[50%] ">
+    <div className="flex flex-col items-center h-[100%] w-[100%] mt-20">
+      <Card className="kartica">
         <CardHeader className="flex justify-center p-0">
           <CardTitle className=" m-6">Dodajte novo vozilo</CardTitle>
         </CardHeader>

@@ -80,7 +80,7 @@ const CarList = () => {
         <CardTitle className="myclass">Oglasi</CardTitle>
       </CardHeader>
       <Separator className="mb-6" />
-      <CardContent className="grid grid-cols-4 grid-rows-3">
+      <CardContent className="gridRaspored2">
         {filteredCarData ? (
           filteredCarData.length === 0 ? (
             <div className="font-bold text-3xl">Nema Rezultata!</div>

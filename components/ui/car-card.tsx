@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./button";
 import { Card, CardDescription, CardHeader, CardTitle } from "./card";
-
+import "../../style/carCard.css";
 // Specify the type for the 'car' prop
 interface CarCardProps {
   car: {
@@ -25,7 +25,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
   };
 
   return (
-    <Card className="w-[90%] mb-6">
+    <Card className="flex flex-col justify-center m-5 karticaAuto">
       <div style={{ width: "100%", height: "200px", overflow: "hidden" }}>
         <img
           src={car_image?.url}
@@ -38,7 +38,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
           }}
         />
       </div>
-      <CardHeader>
+      <CardHeader className="podaci">
         <CardTitle>{brand}</CardTitle>
         <CardDescription>Cijena: {price}</CardDescription>
         <CardDescription>Godiste: {year}</CardDescription>

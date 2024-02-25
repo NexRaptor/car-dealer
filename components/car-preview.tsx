@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-
+import "../style/carPreview.css";
 interface Car {
   id: number;
   brand: string;
@@ -56,39 +56,35 @@ const PregledAutomobila: React.FC<PregledProps> = ({ id }) => {
     }
 
     return (
-      <div className="flex flex-row items-center mt-7 w-[80%]">
-        <Card className="w-[51vw] h-[52vw] p-2">
+      <div className="kartica">
+        <Card className="slikaKartica">
           <img
             src={carDetails.car_image?.url || "/default-image.jpg"}
             alt={carDetails.brand || "Unknown"}
-            style={{
-              width: "50vw",
-              height: "50vw",
-              objectFit: "cover", // This will maintain aspect ratio and cover the container
-              display: "block",
-              borderRadius: "10px",
-            }}
           />
         </Card>
 
-        <div className="p-10">
-          <Card className="p-4 font-bold">{carDetails.brand || "Unknown"}</Card>
-          <Card className="p-4">
+        <div className="detalji">
+          <Card className="detaljiBrand">{carDetails.brand || "Unknown"}</Card>
+          <Card className="detaljiOstalo">
             Cena: {carDetails.price !== undefined ? carDetails.price : "N/A"}
           </Card>
-          <Card className="p-4">Gorivo: {carDetails.fuel || "N/A"}</Card>
-          <Card className="p-4">
+          <Card className="detaljiOstalo">
+            Gorivo: {carDetails.fuel || "N/A"}
+          </Card>
+          <Card className="detaljiOstalo">
             Godina: {carDetails.year !== undefined ? carDetails.year : "N/A"}
           </Card>
-          <Card className="p-4">
+          <Card className="detaljiOstalo">
             Karoserija: {carDetails.bodyType || "N/A"}
           </Card>
-          <Card className="p-4 ">
+          <Card className="detaljiOstalo ">
             Broj telefona: {carDetails._user.phone || "Unknown"}
           </Card>
         </div>
         <Button
           variant="destructive"
+          className="m-6"
           onClick={() => {
             router.push("/");
           }}

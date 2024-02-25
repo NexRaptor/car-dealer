@@ -1,0 +1,74 @@
+.kartica {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px;
+  width: 80vw;
+}
+.detalji {
+  padding: 1rem;
+}
+.detaljiBrand {
+  padding: 1rem;
+  font-weight: bold;
+}
+.detaljiOstalo {
+  padding: 1rem;
+}
+.slikaKartica {
+  width: auto;
+  height: auto;
+  padding: 0.5rem;
+}
+.slika {
+  display: block;
+  object-fit: fill;
+  border-radius: 10px;
+  width: 40vw;
+  height: auto;
+}
+@media screen and (min-width: 801px) and (max-width: 1100px) {
+  .slika {
+    width: 30vw;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .kartica {
+    flex-direction: column;
+    margin: 10px;
+    width: 80vw;
+  }
+  .detalji {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 0.5rem;
+  }
+  .detaljiBrand {
+    padding: 1rem;
+    font-weight: bold;
+  }
+  .detaljiOstalo {
+    padding: 1rem;
+  }
+  .slika {
+    width: 50vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .detalji {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .slika {
+    width: 60vw;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .detalji {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .slika {
+    width: 70vw;
+  }
+}
