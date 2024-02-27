@@ -37,6 +37,7 @@ const CreateNew = () => {
     fuel: z.string(),
     year: z.string(),
     bodyType: z.string(),
+    details: z.string(),
     file: z.unknown(),
   });
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,9 +49,80 @@ const CreateNew = () => {
       fuel: "",
       year: "",
       bodyType: "",
+      details: "",
       file: null,
     },
   });
+  // Validate form data
+  // Validate form data
+  const validateForm = () => {
+    let valid = true;
+
+    // Validate brand
+    if (!form.getValues("brand").trim()) {
+      form.setError("brand", { type: "manual", message: "Brend je obavezan" });
+      valid = false;
+    } else {
+      form.clearErrors("brand");
+    }
+
+    // Validate price
+    const priceValue = parseFloat(form.getValues("price"));
+    if (isNaN(priceValue) || priceValue < 0) {
+      form.setError("price", {
+        type: "manual",
+        message: "Cena ne može biti negativna",
+      });
+      valid = false;
+    } else {
+      form.clearErrors("price");
+    }
+
+    // Validate fuel
+    if (!form.getValues("fuel").trim()) {
+      form.setError("fuel", { type: "manual", message: "Gorivo je obavezno" });
+      valid = false;
+    } else {
+      form.clearErrors("fuel");
+    }
+
+    // Validate year
+    const yearValue = parseInt(form.getValues("year"));
+    if (isNaN(yearValue) || yearValue < 1950 || yearValue > 2024) {
+      form.setError("year", {
+        type: "manual",
+        message: "Godina mora biti između 1950 i 2024",
+      });
+      valid = false;
+    } else {
+      form.clearErrors("year");
+    }
+
+    // Validate bodyType
+    if (!form.getValues("bodyType").trim()) {
+      form.setError("bodyType", {
+        type: "manual",
+        message: "Tip karoserije je obavezan",
+      });
+      valid = false;
+    } else {
+      form.clearErrors("bodyType");
+    }
+
+    // Validate file
+    if (!form.getValues("file")) {
+      form.setError("file", {
+        type: "manual",
+        message: "Fotografija je obavezna",
+      });
+      valid = false;
+    } else {
+      form.clearErrors("file");
+    }
+
+    return valid;
+  };
+
   useEffect(() => {
     const authToken = localStorage.getItem("myDataKey");
 
@@ -75,7 +147,10 @@ const CreateNew = () => {
   }, []); // Empty dependency array to run only once on mount
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (form.formState.isValid) {
+    if (validateForm()) {
+      if (!values.details.trim()) {
+        values.details = "Nema detaljnih informacija.";
+      }
       try {
         const formData = new FormData();
         formData.append("user_id", String(id));
@@ -84,6 +159,7 @@ const CreateNew = () => {
         formData.append("fuel", values.fuel);
         formData.append("year", values.year);
         formData.append("bodyType", values.bodyType);
+        formData.append("details", values.details);
         formData.append("file", values.file as File);
         const authToken = localStorage.getItem("myDataKey");
 
@@ -97,7 +173,6 @@ const CreateNew = () => {
         toast.success("Uspešno");
         console.log(response.data);
       } catch (error) {
-        // Handle error response
         toast.error("Došlo je do greške prilikom slanja forme.");
         console.error(error);
       }
@@ -128,9 +203,75 @@ const CreateNew = () => {
                       <SelectValue placeholder="Izaberite brend automobila" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="BMW">BMW</SelectItem>
+                      <SelectItem value="Abarth">Abarth</SelectItem>
+                      <SelectItem value="Alfa Romeo">Alfa Romeo</SelectItem>
+                      <SelectItem value="Aston Martin">Aston Martin</SelectItem>
                       <SelectItem value="Audi">Audi</SelectItem>
-                      <SelectItem value="VW">Volkswagen</SelectItem>
+                      <SelectItem value="Bentley">Bentley</SelectItem>
+                      <SelectItem value="BMW">BMW</SelectItem>
+                      <SelectItem value="Bugatti">Bugatti</SelectItem>
+                      <SelectItem value="Buick">Buick</SelectItem>
+                      <SelectItem value="Cadillac">Cadillac</SelectItem>
+                      <SelectItem value="Chevrolet">Chevrolet</SelectItem>
+                      <SelectItem value="Chrysler">Chrysler</SelectItem>
+                      <SelectItem value="Citroën">Citroën</SelectItem>
+                      <SelectItem value="Dacia">Dacia</SelectItem>
+                      <SelectItem value="Daewoo">Daewoo</SelectItem>
+                      <SelectItem value="Daihatsu">Daihatsu</SelectItem>
+                      <SelectItem value="Dodge">Dodge</SelectItem>
+                      <SelectItem value="Ferrari">Ferrari</SelectItem>
+                      <SelectItem value="Fiat">Fiat</SelectItem>
+                      <SelectItem value="Ford">Ford</SelectItem>
+                      <SelectItem value="Genesis">Genesis</SelectItem>
+                      <SelectItem value="GMC">GMC</SelectItem>
+                      <SelectItem value="Honda">Honda</SelectItem>
+                      <SelectItem value="Hyundai">Hyundai</SelectItem>
+                      <SelectItem value="Infiniti">Infiniti</SelectItem>
+                      <SelectItem value="Isuzu">Isuzu</SelectItem>
+                      <SelectItem value="Jaguar">Jaguar</SelectItem>
+                      <SelectItem value="Jeep">Jeep</SelectItem>
+                      <SelectItem value="Kia">Kia</SelectItem>
+                      <SelectItem value="Koenigsegg">Koenigsegg</SelectItem>
+                      <SelectItem value="Lamborghini">Lamborghini</SelectItem>
+                      <SelectItem value="Lancia">Lancia</SelectItem>
+                      <SelectItem value="Land Rover">Land Rover</SelectItem>
+                      <SelectItem value="Lexus">Lexus</SelectItem>
+                      <SelectItem value="Lincoln">Lincoln</SelectItem>
+                      <SelectItem value="Lotus">Lotus</SelectItem>
+                      <SelectItem value="Maserati">Maserati</SelectItem>
+                      <SelectItem value="Maybach">Maybach</SelectItem>
+                      <SelectItem value="Mazda">Mazda</SelectItem>
+                      <SelectItem value="McLaren">McLaren</SelectItem>
+                      <SelectItem value="Mercedes-Benz">
+                        Mercedes-Benz
+                      </SelectItem>
+                      <SelectItem value="Mercury">Mercury</SelectItem>
+                      <SelectItem value="MG">MG</SelectItem>
+                      <SelectItem value="Mini">Mini</SelectItem>
+                      <SelectItem value="Mitsubishi">Mitsubishi</SelectItem>
+                      <SelectItem value="Morgan">Morgan</SelectItem>
+                      <SelectItem value="Nissan">Nissan</SelectItem>
+                      <SelectItem value="Noble">Noble</SelectItem>
+                      <SelectItem value="Opel">Opel</SelectItem>
+                      <SelectItem value="Pagani">Pagani</SelectItem>
+                      <SelectItem value="Peugeot">Peugeot</SelectItem>
+                      <SelectItem value="Porsche">Porsche</SelectItem>
+                      <SelectItem value="Ram">Ram</SelectItem>
+                      <SelectItem value="Renault">Renault</SelectItem>
+                      <SelectItem value="Rolls-Royce">Rolls-Royce</SelectItem>
+                      <SelectItem value="Saab">Saab</SelectItem>
+                      <SelectItem value="Seat">Seat</SelectItem>
+                      <SelectItem value="Škoda">Škoda</SelectItem>
+                      <SelectItem value="Smart">Smart</SelectItem>
+                      <SelectItem value="Subaru">Subaru</SelectItem>
+                      <SelectItem value="Suzuki">Suzuki</SelectItem>
+                      <SelectItem value="Tesla">Tesla</SelectItem>
+                      <SelectItem value="Toyota">Toyota</SelectItem>
+                      <SelectItem value="Vauxhall">Vauxhall</SelectItem>
+                      <SelectItem value="VW">VW</SelectItem>
+                      <SelectItem value="Volvo">Volvo</SelectItem>
+                      <SelectItem value="Wuling">Wuling</SelectItem>
+                      <SelectItem value="Zagato">Zagato</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -169,7 +310,14 @@ const CreateNew = () => {
                     <SelectContent>
                       <SelectItem value="Benzin">Benzin</SelectItem>
                       <SelectItem value="Dizel">Dizel</SelectItem>
-                      <SelectItem value="Električni">Električni</SelectItem>
+                      <SelectItem value="TNG (Auto-gas)">
+                        TNG (Auto-gas)
+                      </SelectItem>
+                      <SelectItem value="Metan">Metan</SelectItem>
+                      <SelectItem value="Hibrid">Hibrid</SelectItem>
+                      <SelectItem value="Električni pogon">
+                        Električni pogon
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -214,6 +362,22 @@ const CreateNew = () => {
                       <SelectItem value="Karavan">Karavan</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </div>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="details"
+              render={({ field }) => (
+                <div>
+                  <FormLabel>Dettaljan opis</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Unesite detaljan opis"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                   <FormMessage />
                 </div>
               )}

@@ -12,6 +12,7 @@ interface Car {
   fuel: string;
   year: number;
   bodyType: string;
+  details: string;
   car_image: {
     url: string;
   };
@@ -80,6 +81,10 @@ const PregledAutomobila: React.FC<PregledProps> = ({ id }) => {
           </Card>
           <Card className="detaljiOstalo ">
             Broj telefona: {carDetails._user.phone || "Unknown"}
+          </Card>
+          <Card className="detaljiOstalo ">
+            Detaljan opis: <br />
+            {carDetails.details || "Unknown"}
           </Card>
         </div>
         <Button
