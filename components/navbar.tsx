@@ -25,7 +25,12 @@ const Navbar = () => {
   return (
     <Card className="navbar">
       <CardHeader className="flex justify-center p-0">
-        <Link href="/">
+        <Link
+          href="/"
+          onClick={() => {
+            router.refresh();
+          }}
+        >
           <CardTitle className="m-6 naslovHeadera">Polovna vozila</CardTitle>
         </Link>
       </CardHeader>

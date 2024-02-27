@@ -116,8 +116,21 @@ const SignIn = () => {
           toast.success("Korisnik uspješno kreiran.");
           router.push("/new");
         }
-      } catch (error) {
-        toast.error("Došlo je do greške.");
+      } catch (error: any) {
+        if (error.response && error.response.status === 403) {
+          const responseData = error.response.data;
+          if (
+            responseData &&
+            responseData.code === "ERROR_CODE_ACCESS_DENIED"
+          ) {
+            toast.error("This account is already in use.");
+            // You might want to handle other specific errors here if needed
+          } else {
+            toast.error("Nije autorizovan");
+          }
+        } else {
+          toast.error("Došlo je do greške.");
+        }
       }
     }
   };
