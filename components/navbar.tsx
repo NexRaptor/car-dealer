@@ -18,19 +18,16 @@ const Navbar = () => {
     // Redirect to the logout page or any other desired page
     router.push("/auth/log-in");
   };
-
+  const handleRefresh = () => {
+    window.location.reload();
+  };
   const isTokenAvailable =
     typeof localStorage !== "undefined" && localStorage.getItem("myDataKey");
 
   return (
     <Card className="navbar">
       <CardHeader className="flex justify-center p-0">
-        <Link
-          href="/"
-          onClick={() => {
-            router.refresh();
-          }}
-        >
+        <Link href="/" onClick={handleRefresh}>
           <CardTitle className="m-6 naslovHeadera">Polovna vozila</CardTitle>
         </Link>
       </CardHeader>
