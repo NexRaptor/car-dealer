@@ -371,7 +371,7 @@ const CreateNew = () => {
               name="details"
               render={({ field }) => (
                 <div>
-                  <FormLabel>Dettaljan opis</FormLabel>
+                  <FormLabel>Detaljan opis</FormLabel>
                   <Input
                     type="text"
                     placeholder="Unesite detaljan opis"

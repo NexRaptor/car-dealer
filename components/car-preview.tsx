@@ -60,6 +60,7 @@ const PregledAutomobila: React.FC<PregledProps> = ({ id }) => {
       <div className="kartica">
         <Card className="slikaKartica">
           <img
+            className="slika"
             src={carDetails.car_image?.url || "/default-image.jpg"}
             alt={carDetails.brand || "Unknown"}
           />

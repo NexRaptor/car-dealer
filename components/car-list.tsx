@@ -21,7 +21,9 @@ interface Car {
 const CarList = () => {
   const [carData, setCarData] = useState<Car[]>([]);
   const [filteredCarData, setFilteredCarData] = useState<Car[] | null>(null);
-
+  const handleRefresh = () => {
+    window.location.reload();
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
